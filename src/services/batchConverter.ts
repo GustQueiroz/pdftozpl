@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import JSZip from 'jszip';
 import { LabelZoomApiService } from './labelZoomApi';
 

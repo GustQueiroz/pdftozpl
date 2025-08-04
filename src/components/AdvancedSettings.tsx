@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
+
 interface LabelZoomParams {
   label?: {
     width?: number;
@@ -33,36 +35,40 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
   onParamsChange
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isDeclarationMode, setIsDeclarationMode] = useState(false);
 
-  const updateParam = (key: keyof LabelZoomParams, value: any) => {
-    onParamsChange({
-      ...params,
-      [key]: value
-    });
+  const handleParamChange = (key: keyof LabelZoomParams, value: any) => {
+    const newParams = { ...params, [key]: value };
+    onParamsChange(newParams);
   };
 
-  const updateLabelParam = (key: keyof LabelZoomParams['label'], value: any) => {
-    onParamsChange({
-      ...params,
-      label: {
-        ...params.label,
-        [key]: value
-      }
-    });
-  };
-
-  const updatePdfParam = (key: keyof LabelZoomParams['pdf'], value: any) => {
-    onParamsChange({
-      ...params,
-      pdf: {
-        ...params.pdf,
-        [key]: value
-      }
-    });
+  const handleDeclarationChange = (checked: boolean) => {
+    setIsDeclarationMode(checked);
+    if (checked) {
+      handleParamChange('scaling', 48);
+    } else {
+      handleParamChange('scaling', 100);
+    }
   };
 
   return (
     <div className="advanced-settings">
+      <div className="declaration-section">
+        <div className="form-group">
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={isDeclarationMode}
+              onChange={(e) => handleDeclarationChange(e.target.checked)}
+            />
+            <span className="checkbox-text">📋 Declaração de Conteúdo</span>
+          </label>
+          <p className="checkbox-description">
+            Quando marcado, aplica scaling 48 para otimizar a conversão de declarações de conteúdo
+          </p>
+        </div>
+      </div>
+
       <button
         className="expand-button"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -73,103 +79,124 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       {isExpanded && (
         <div className="settings-content">
           <div className="settings-section">
-            <h4>Configurações do Label</h4>
+            <h4>📏 Dimensões da Etiqueta</h4>
             <div className="form-group">
-              <label>Largura (polegadas):</label>
+              <label>Largura (mm):</label>
               <input
                 type="number"
-                step="0.1"
                 value={params.label?.width || ''}
-                onChange={(e) => updateLabelParam('width', e.target.value ? Number(e.target.value) : undefined)}
-                placeholder="Auto"
+                onChange={(e) => handleParamChange('label', {
+                  ...params.label,
+                  width: e.target.value ? Number(e.target.value) : undefined
+                })}
+                placeholder="Ex: 100"
               />
             </div>
             <div className="form-group">
-              <label>Altura (polegadas):</label>
+              <label>Altura (mm):</label>
               <input
                 type="number"
-                step="0.1"
                 value={params.label?.height || ''}
-                onChange={(e) => updateLabelParam('height', e.target.value ? Number(e.target.value) : undefined)}
-                placeholder="Auto"
+                onChange={(e) => handleParamChange('label', {
+                  ...params.label,
+                  height: e.target.value ? Number(e.target.value) : undefined
+                })}
+                placeholder="Ex: 50"
               />
             </div>
           </div>
 
           <div className="settings-section">
-            <h4>Configurações do PDF</h4>
-            <div className="form-group">
-              <label>Modo de Conversão:</label>
-              <select
-                value={params.pdf?.conversionMode || 'IMAGE'}
-                onChange={(e) => updatePdfParam('conversionMode', e.target.value)}
-              >
-                <option value="IMAGE">Imagem</option>
-                <option value="NATIVE">Nativo</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Número da Página (0-based):</label>
-              <input
-                type="number"
-                min="0"
-                value={params.pdf?.pageNumber || ''}
-                onChange={(e) => updatePdfParam('pageNumber', e.target.value ? Number(e.target.value) : undefined)}
-                placeholder="Todas as páginas"
-              />
-            </div>
-          </div>
-
-          <div className="settings-section">
-            <h4>Configurações Gerais</h4>
+            <h4>🖨️ Configurações de Impressão</h4>
             <div className="form-group">
               <label>DPI:</label>
-              <input
-                type="number"
-                min="72"
-                max="600"
+              <select
                 value={params.dpi || 203}
-                onChange={(e) => updateParam('dpi', Number(e.target.value))}
-              />
+                onChange={(e) => handleParamChange('dpi', Number(e.target.value))}
+              >
+                <option value={203}>203 DPI (Padrão)</option>
+                <option value={300}>300 DPI (Alta Qualidade)</option>
+                <option value={600}>600 DPI (Máxima Qualidade)</option>
+              </select>
             </div>
             <div className="form-group">
               <label>Rotacionar (graus):</label>
               <input
                 type="number"
+                value={params.rotation || 0}
+                onChange={(e) => handleParamChange('rotation', Number(e.target.value))}
                 min="0"
                 max="360"
-                value={params.rotation || 0}
-                onChange={(e) => updateParam('rotation', Number(e.target.value))}
               />
             </div>
             <div className="form-group">
               <label>Escala (%):</label>
               <input
                 type="number"
+                value={params.scaling || 100}
+                onChange={(e) => handleParamChange('scaling', Number(e.target.value))}
                 min="1"
                 max="200"
-                value={params.scaling || 100}
-                onChange={(e) => updateParam('scaling', Number(e.target.value))}
+                disabled={isDeclarationMode}
               />
+              {isDeclarationMode && (
+                <small className="disabled-note">
+                  Escala fixa em 48% para declaração de conteúdo
+                </small>
+              )}
             </div>
+          </div>
+
+          <div className="settings-section">
+            <h4>🎨 Configurações de Cor</h4>
             <div className="form-group">
               <label>Modo de Cor:</label>
               <select
                 value={params.colorMode || 'GRAYSCALE'}
-                onChange={(e) => updateParam('colorMode', e.target.value)}
+                onChange={(e) => handleParamChange('colorMode', e.target.value)}
               >
                 <option value="GRAYSCALE">Escala de Cinza</option>
                 <option value="BW">Preto e Branco</option>
               </select>
             </div>
             <div className="form-group">
-              <label>Escuridão (%):</label>
+              <label>Escuridão (1-100):</label>
               <input
                 type="number"
-                min="0"
-                max="100"
                 value={params.darkness || 70}
-                onChange={(e) => updateParam('darkness', Number(e.target.value))}
+                onChange={(e) => handleParamChange('darkness', Number(e.target.value))}
+                min="1"
+                max="100"
+              />
+            </div>
+          </div>
+
+          <div className="settings-section">
+            <h4>📄 Configurações PDF</h4>
+            <div className="form-group">
+              <label>Modo de Conversão:</label>
+              <select
+                value={params.pdf?.conversionMode || 'IMAGE'}
+                onChange={(e) => handleParamChange('pdf', {
+                  ...params.pdf,
+                  conversionMode: e.target.value as 'IMAGE' | 'NATIVE'
+                })}
+              >
+                <option value="IMAGE">Imagem (Recomendado)</option>
+                <option value="NATIVE">Nativo</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Número da Página:</label>
+              <input
+                type="number"
+                value={params.pdf?.pageNumber || ''}
+                onChange={(e) => handleParamChange('pdf', {
+                  ...params.pdf,
+                  pageNumber: e.target.value ? Number(e.target.value) : undefined
+                })}
+                placeholder="Deixe vazio para primeira página"
+                min="1"
               />
             </div>
           </div>

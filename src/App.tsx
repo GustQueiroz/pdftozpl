@@ -142,14 +142,11 @@ function App() {
         }
       );
 
-      // Criar arquivo ZIP
       const zipBlob = await BatchConverter.createZipFile(results);
       
-      // Baixar arquivo ZIP
       const zipFileName = `converted_files_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.zip`;
       BatchConverter.downloadZipFile(zipBlob, zipFileName);
 
-      // Mostrar resumo
       const successful = results.filter(r => r.success).length;
       const failed = results.filter(r => !r.success).length;
       

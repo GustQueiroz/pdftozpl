@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef, useState } from 'react';
 
 interface FileUploadProps {
@@ -21,7 +22,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     const validFiles: File[] = [];
     const errors: string[] = [];
 
-    Array.from(files).forEach((file, index) => {
+    Array.from(files).forEach((file, _index) => {
       const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
       if (!acceptedTypes.includes(fileExtension)) {
         errors.push(`${file.name}: Tipo de arquivo não suportado`);
