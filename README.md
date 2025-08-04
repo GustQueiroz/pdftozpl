@@ -98,17 +98,24 @@ Esta aplicação utiliza a [API LabelZoom](https://api.labelzoom.net/v2/api-docs
 
 ## 🚀 Executáveis Rápidos
 
-### Windows (Batch)
+### 🎯 Script Principal (Recomendado)
+- **`fix-and-run.bat`** - **Use este!** Corrige problemas e executa automaticamente
+
+### 🔧 Scripts Alternativos
+- **`fix-and-run.ps1`** - Versão PowerShell com verificações
 - **`build-and-open.bat`** - Build completo + servidor de preview
 - **`build-and-open-simple.bat`** - Build + arquivo HTML direto
-
-### Windows (PowerShell)
 - **`build-and-open.ps1`** - Script interativo com opções
 
-### Como Usar
-1. **Duplo clique** em qualquer arquivo `.bat` ou `.ps1`
-2. Aguarde o build automático
-3. A aplicação abrirá no navegador automaticamente
+### 📋 Como Usar
+1. **Duplo clique** em `fix-and-run.bat` (recomendado)
+2. Aguarde a instalação automática
+3. A aplicação abrirá em http://localhost:5173
+
+### 🔧 Solução de Problemas
+Se der erro `crypto.hash is not a function`:
+1. Execute `fix-and-run.bat` (corrige automaticamente)
+2. Ou atualize o Node.js para versão 18.x+
 
 > **Nota**: Para PowerShell, pode ser necessário executar: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
 
