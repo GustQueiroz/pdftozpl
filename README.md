@@ -25,7 +25,7 @@ Uma aplicação web moderna para converter arquivos PDF e PNG para código ZPL u
 
 1. Clone o repositório:
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/GustQueiroz/pdftozpl
 cd pdftozpl
 ```
 
