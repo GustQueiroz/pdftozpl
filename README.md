@@ -96,6 +96,22 @@ Esta aplicação utiliza a [API LabelZoom](https://api.labelzoom.net/v2/api-docs
   - `/convert/png-to-zpl`
   - `/convert/zpl-to-pdf`
 
+## 🚀 Executáveis Rápidos
+
+### Windows (Batch)
+- **`build-and-open.bat`** - Build completo + servidor de preview
+- **`build-and-open-simple.bat`** - Build + arquivo HTML direto
+
+### Windows (PowerShell)
+- **`build-and-open.ps1`** - Script interativo com opções
+
+### Como Usar
+1. **Duplo clique** em qualquer arquivo `.bat` ou `.ps1`
+2. Aguarde o build automático
+3. A aplicação abrirá no navegador automaticamente
+
+> **Nota**: Para PowerShell, pode ser necessário executar: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+
 ## 📁 Estrutura do Projeto
 
 ```

@@ -31,7 +31,7 @@ interface ConversionResponse {
   message?: string;
 }
 
-const API_BASE_URL = '/api'; // Usando proxy local
+const API_BASE_URL = '/api';
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 export class LabelZoomApiService {
