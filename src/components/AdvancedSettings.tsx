@@ -46,8 +46,12 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
     setIsDeclarationMode(checked);
     if (checked) {
       handleParamChange('scaling', 48);
+      handleParamChange('darkness', 80);
+      handleParamChange('colorMode', 'BW');
     } else {
       handleParamChange('scaling', 100);
+      handleParamChange('darkness', 70);
+      handleParamChange('colorMode', 'GRAYSCALE');
     }
   };
 
@@ -64,7 +68,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
             <span className="checkbox-text">📋 Declaração de Conteúdo</span>
           </label>
           <p className="checkbox-description">
-            Quando marcado, aplica scaling 48 para otimizar a conversão de declarações de conteúdo
+            Quando marcado, aplica configurações otimizadas
           </p>
         </div>
       </div>
@@ -154,10 +158,16 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               <select
                 value={params.colorMode || 'GRAYSCALE'}
                 onChange={(e) => handleParamChange('colorMode', e.target.value)}
+                disabled={isDeclarationMode}
               >
                 <option value="GRAYSCALE">Escala de Cinza</option>
                 <option value="BW">Preto e Branco</option>
               </select>
+              {isDeclarationMode && (
+                <small className="disabled-note">
+                  Modo fixo em Preto e Branco para declaração de conteúdo
+                </small>
+              )}
             </div>
             <div className="form-group">
               <label>Escuridão (1-100):</label>
@@ -167,7 +177,13 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 onChange={(e) => handleParamChange('darkness', Number(e.target.value))}
                 min="1"
                 max="100"
+                disabled={isDeclarationMode}
               />
+              {isDeclarationMode && (
+                <small className="disabled-note">
+                  Escuridão fixa em 80% para declaração de conteúdo
+                </small>
+              )}
             </div>
           </div>
 
