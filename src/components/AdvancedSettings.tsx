@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// Tipos inline para evitar problemas de importação
 interface LabelZoomParams {
   label?: {
     width?: number;

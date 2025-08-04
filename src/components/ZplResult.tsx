@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 
 interface ZplResultProps {
@@ -8,10 +9,9 @@ interface ZplResultProps {
 export const ZplResult: React.FC<ZplResultProps> = ({ zplCode, fileName }) => {
   const [copied, setCopied] = useState(false);
 
-  // Baixar automaticamente o arquivo .txt quando o componente é montado
   useEffect(() => {
     downloadZpl();
-  }, [zplCode]); // Executa sempre que o código ZPL mudar
+  }, [zplCode]);
 
   const copyToClipboard = async () => {
     try {

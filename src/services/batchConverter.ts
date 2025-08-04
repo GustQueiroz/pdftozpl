@@ -1,7 +1,6 @@
 import JSZip from 'jszip';
 import { LabelZoomApiService } from './labelZoomApi';
 
-// Tipos inline
 interface LabelZoomParams {
   label?: {
     width?: number;
@@ -48,7 +47,6 @@ export class BatchConverter {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       
-      // Chamar callback de progresso
       if (onProgress) {
         onProgress(i, files.length, file.name);
       }
@@ -95,7 +93,6 @@ export class BatchConverter {
       }
     }
 
-    // Chamar callback final
     if (onProgress) {
       onProgress(files.length, files.length, '');
     }
@@ -106,7 +103,6 @@ export class BatchConverter {
   static async createZipFile(results: ConversionResult[]): Promise<Blob> {
     const zip = new JSZip();
 
-    // Adicionar cada arquivo convertido ao ZIP
     results.forEach(result => {
       if (result.success && result.zplCode) {
         const fileName = result.fileName.replace(/\.[^/.]+$/, '') + '.txt';
@@ -114,7 +110,6 @@ export class BatchConverter {
       }
     });
 
-    // Gerar o arquivo ZIP
     return await zip.generateAsync({ type: 'blob' });
   }
 

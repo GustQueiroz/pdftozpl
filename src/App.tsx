@@ -54,7 +54,6 @@ function App() {
   const [result, setResult] = useState<ConversionResponse | null>(null);
   const [error, setError] = useState<string>('');
 
-  // Estados para conversão em lote
   const [batchProgress, setBatchProgress] = useState({
     processed: 0,
     total: 0,

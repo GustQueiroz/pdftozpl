@@ -3,14 +3,14 @@ import React, { useRef, useState } from 'react';
 interface FileUploadProps {
   onFileSelect: (files: File[]) => void;
   acceptedTypes?: string[];
-  maxSize?: number; // em MB
+  maxSize?: number;
   multiple?: boolean;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
   onFileSelect,
   acceptedTypes = ['.pdf', '.png'],
-  maxSize = 1, // 1MB por padrão
+  maxSize = 1,
   multiple = true
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -22,14 +22,12 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     const errors: string[] = [];
 
     Array.from(files).forEach((file, index) => {
-      // Verificar tipo de arquivo
       const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
       if (!acceptedTypes.includes(fileExtension)) {
         errors.push(`${file.name}: Tipo de arquivo não suportado`);
         return;
       }
 
-      // Verificar tamanho do arquivo
       const fileSizeMB = file.size / (1024 * 1024);
       if (fileSizeMB > maxSize) {
         errors.push(`${file.name}: Arquivo muito grande (${fileSizeMB.toFixed(2)}MB > ${maxSize}MB)`);

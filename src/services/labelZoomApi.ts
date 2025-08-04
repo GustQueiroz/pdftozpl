@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Tipos inline para evitar problemas de importação
 interface LabelZoomParams {
   label?: {
     width?: number;
@@ -31,7 +30,7 @@ interface ConversionResponse {
   message?: string;
 }
 
-const API_BASE_URL = '/api'; // Usando proxy local
+const API_BASE_URL = '/api';
 const DEFAULT_API_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ2ZXIiOm51bGwsInByb2QiOjMsInVzciI6IkFQSSBVU0VSIiwidmFyIjpudWxsLCJsaWMiOiIzNjczMWY3NiIsInR5cCI6IkQiLCJzZWNyZXQiOiI1MDJmMDg0MjQzNGFlNjA1MDZlZCIsImV4cCI6MTc4NTgwNzM4Nn0.Dc4k1bPbkBsf-LVo81jegxsSg2cfmvj3UNs8McRfTCAG7ueLZWy4lgQqbuewVk5pxe67_GamdD5iTLl883xSRAn6aw1QHN1vnZnhRVXsRMrAq6fdVTwqpiCkHmXEWqyg3U4nZurYBPth-Qlo_Th_fwB-aV0V3PhH_26_Fe5Kkww';
 
 export class LabelZoomApiService {
@@ -41,26 +40,23 @@ export class LabelZoomApiService {
     params?: LabelZoomParams
   ): Promise<ConversionResponse> {
     try {
-      // Criar URLSearchParams para os parâmetros
       const urlParams = new URLSearchParams();
       if (params) {
         urlParams.append('params', JSON.stringify(params));
       }
 
-      // Configurar headers
       const headers: Record<string, string> = {
         'Content-Type': file.type,
         'Accept': 'text/plain',
         'Authorization': `Bearer ${DEFAULT_API_KEY}`,
       };
 
-      // Fazer a requisição através do proxy
       const response = await axios.post(
         `${API_BASE_URL}${endpoint}?${urlParams.toString()}`,
         file,
         {
           headers,
-          timeout: 30000, // 30 segundos
+          timeout: 30000,
           responseType: 'text',
         }
       );
@@ -107,7 +103,6 @@ export class LabelZoomApiService {
     params?: LabelZoomParams
   ): Promise<ConversionResponse> {
     try {
-      // Para ZPL to PDF, precisamos enviar o código ZPL como texto
       const urlParams = new URLSearchParams();
       if (params) {
         urlParams.append('params', JSON.stringify(params));
