@@ -43,7 +43,7 @@ function App() {
     dpi: 203,
     rotation: 0,
     scaling: 100,
-    colorMode: 'GRAYSCALE',
+    colorMode: 'BW',
     darkness: 70,
     pdf: {
       conversionMode: 'IMAGE'
@@ -177,7 +177,7 @@ function App() {
       dpi: 203,
       rotation: 0,
       scaling: 100,
-      colorMode: 'GRAYSCALE',
+      colorMode: 'BW',
       darkness: 70,
       pdf: {
         conversionMode: 'IMAGE'

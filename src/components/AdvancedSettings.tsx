@@ -51,7 +51,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
     } else {
       handleParamChange('scaling', 100);
       handleParamChange('darkness', 70);
-      handleParamChange('colorMode', 'GRAYSCALE');
+      handleParamChange('colorMode', 'BW');
     }
   };
 
@@ -68,7 +68,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
             <span className="checkbox-text">📋 Declaração de Conteúdo</span>
           </label>
           <p className="checkbox-description">
-            Quando marcado, aplica configurações otimizadas
+            Quando marcado, aplica configurações otimizadas para declarações de conteúdo: escala 48% e escuridão 80%
           </p>
         </div>
       </div>
@@ -156,16 +156,16 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
             <div className="form-group">
               <label>Modo de Cor:</label>
               <select
-                value={params.colorMode || 'GRAYSCALE'}
+                value={params.colorMode || 'BW'}
                 onChange={(e) => handleParamChange('colorMode', e.target.value)}
                 disabled={isDeclarationMode}
               >
-                <option value="GRAYSCALE">Escala de Cinza</option>
                 <option value="BW">Preto e Branco</option>
+                <option value="GRAYSCALE">Escala de Cinza</option>
               </select>
               {isDeclarationMode && (
                 <small className="disabled-note">
-                  Modo fixo em Preto e Branco para declaração de conteúdo
+                  Modo fixo em Preto e Branco (otimizado para declaração de conteúdo)
                 </small>
               )}
             </div>
