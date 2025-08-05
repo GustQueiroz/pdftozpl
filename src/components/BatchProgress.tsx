@@ -1,4 +1,13 @@
 import React from 'react';
+import {
+  Box,
+  Typography,
+  Paper,
+  LinearProgress,
+  Alert,
+  Chip
+} from '@mui/material';
+import SyncIcon from '@mui/icons-material/Sync';
 
 interface BatchProgressProps {
   totalFiles: number;
@@ -16,38 +25,56 @@ export const BatchProgress: React.FC<BatchProgressProps> = ({
   const progressPercentage = totalFiles > 0 ? (processedFiles / totalFiles) * 100 : 0;
 
   return (
-    <div className="batch-progress">
-      <div className="progress-header">
-        <h3>🔄 Processando Arquivos em Lote</h3>
-        <div className="progress-stats">
-          <span>{processedFiles} de {totalFiles} arquivos processados</span>
-          <span>{Math.round(progressPercentage)}% concluído</span>
-        </div>
-      </div>
+    <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+        <SyncIcon color="primary" sx={{ fontSize: 32 }} />
+        <Typography variant="h5" component="h3">
+          🔄 Processando Arquivos em Lote
+        </Typography>
+      </Box>
 
-      <div className="progress-bar-container">
-        <div 
-          className="progress-bar" 
-          style={{ width: `${progressPercentage}%` }}
-        ></div>
-      </div>
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            {processedFiles} de {totalFiles} arquivos processados
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {Math.round(progressPercentage)}% concluído
+          </Typography>
+        </Box>
+        
+        <LinearProgress
+          variant="determinate"
+          value={progressPercentage}
+          sx={{ height: 8, borderRadius: 4 }}
+        />
+      </Box>
 
-      {isProcessing && (
-        <div className="current-file">
-          <p>
+      {isProcessing && currentFile && (
+        <Alert severity="info" sx={{ mb: 3 }}>
+          <Typography variant="body2">
             <strong>Processando:</strong> {currentFile}
-          </p>
-        </div>
+          </Typography>
+        </Alert>
       )}
 
-      <div className="progress-info">
-        <p>
-          <strong>Status:</strong> {isProcessing ? 'Processando...' : 'Aguardando...'}
-        </p>
-        <p>
-          <strong>Arquivos restantes:</strong> {totalFiles - processedFiles}
-        </p>
-      </div>
-    </div>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        <Chip
+          label={`Status: ${isProcessing ? 'Processando...' : 'Aguardando...'}`}
+          color={isProcessing ? 'primary' : 'default'}
+          variant="outlined"
+        />
+        <Chip
+          label={`Arquivos restantes: ${totalFiles - processedFiles}`}
+          variant="outlined"
+          color="secondary"
+        />
+        <Chip
+          label={`Progresso: ${Math.round(progressPercentage)}%`}
+          variant="outlined"
+          color="info"
+        />
+      </Box>
+    </Paper>
   );
 }; 

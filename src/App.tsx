@@ -1,11 +1,18 @@
 import { useState } from 'react';
+import {
+  Container,
+  Typography,
+  Box,
+  Paper,
+  Alert,
+  Divider
+} from '@mui/material';
 import { FileUpload } from './components/FileUpload';
 import { AdvancedSettings } from './components/AdvancedSettings';
 import { ZplResult } from './components/ZplResult';
 import { BatchProgress } from './components/BatchProgress';
 import { LabelZoomApiService } from './services/labelZoomApi';
 import { BatchConverter } from './services/batchConverter';
-import './App.css';
 
 interface LabelZoomParams {
   label?: {
@@ -41,7 +48,7 @@ function App() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [params, setParams] = useState<LabelZoomParams>({
     dpi: 203,
-    rotation: 0,
+    rotation: 180,
     scaling: 100,
     colorMode: 'BW',
     darkness: 70,
@@ -175,7 +182,7 @@ function App() {
     setIsBatchMode(false);
     setParams({
       dpi: 203,
-      rotation: 0,
+      rotation: 180,
       scaling: 100,
       colorMode: 'BW',
       darkness: 70,
@@ -186,72 +193,68 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>🖨️ PDF para ZPL Converter</h1>
-        <p>Converte arquivos PDF e PNG para código ZPL usando a API LabelZoom</p>
-      </header>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Box sx={{ textAlign: 'center', mb: 4 }}>
+        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
+          🖨️ PDF para ZPL Converter
+        </Typography>
+        <Typography variant="h6" color="text.secondary" gutterBottom>
+          Converte arquivos PDF e PNG para código ZPL usando a API LabelZoom
+        </Typography>
+      </Box>
 
-      <main className="app-main">
-        <div className="converter-container">
-          <div className="upload-section">
-            <h3>📁 Selecionar Arquivos</h3>
+      <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', md: 'row' } }}>
+        <Box sx={{ flex: 1 }}>
+          <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+            <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+              📁 Selecionar Arquivos
+            </Typography>
+            
             <FileUpload
               onFileSelect={handleFileSelect}
               acceptedTypes={['.pdf', '.png']}
               maxSize={1}
               multiple={true}
             />
+            
             {selectedFiles.length > 0 && (
-              <div className="selected-files">
-                <h4>Arquivos Selecionados ({selectedFiles.length}):</h4>
-                <div className="files-list">
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  Arquivos Selecionados ({selectedFiles.length}):
+                </Typography>
+                <Box sx={{ maxHeight: 200, overflow: 'auto' }}>
                   {selectedFiles.map((file, index) => (
-                    <div key={index} className="file-item">
-                      <span className="file-name">{file.name}</span>
-                      <span className="file-size">
+                    <Box
+                      key={index}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        p: 1,
+                        mb: 1,
+                        bgcolor: 'grey.50',
+                        borderRadius: 1
+                      }}
+                    >
+                      <Typography variant="body2" sx={{ flex: 1 }}>
+                        {file.name}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
                         ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                      </span>
-                    </div>
+                      </Typography>
+                    </Box>
                   ))}
-                </div>
-              </div>
+                </Box>
+              </Box>
             )}
-          </div>
+          </Paper>
 
           <AdvancedSettings params={params} onParamsChange={setParams} />
 
-          <div className="action-buttons">
-            {selectedFiles.length === 1 && (
-              <button
-                className="convert-button"
-                onClick={handleSingleConvert}
-                disabled={isConverting}
-              >
-                {isConverting ? '🔄 Convertendo...' : '🚀 Converter para ZPL'}
-              </button>
-            )}
-            
-            {selectedFiles.length > 1 && (
-              <button
-                className="batch-convert-button"
-                onClick={handleBatchConvert}
-                disabled={isConverting}
-              >
-                {isConverting ? '🔄 Processando...' : `🚀 Converter ${selectedFiles.length} Arquivos`}
-              </button>
-            )}
-            
-            <button className="reset-button" onClick={handleReset}>
-              🔄 Reiniciar
-            </button>
-          </div>
-
           {error && (
-            <div className="error-message">
-              <h4>❌ Erro</h4>
-              <p>{error}</p>
-            </div>
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
           )}
 
           {isConverting && isBatchMode && (
@@ -266,38 +269,115 @@ function App() {
           {result && result.zpl && (
             <ZplResult zplCode={result.zpl} fileName={selectedFiles[0]?.name} />
           )}
-        </div>
-           
-        <div className="api-info">
-          <h3>ℹ️ Sobre a API LabelZoom</h3>
-          <div className="info-grid">
-            <div className="info-item">
-              <h4>✅ Funcionalidades</h4>
-              <ul>
-                <li>Conversão individual: PDF/PNG → ZPL</li>
-                <li>Conversão em lote: Múltiplos arquivos</li>
-                <li>Download automático: .txt individual ou .zip em lote</li>
-                <li>Configurações avançadas</li>
-              </ul>
-            </div>
-            <div className="info-item">
-              <h4>📋 Limitações</h4>
-              <ul>
-                <li>Tamanho máximo: 1MB por arquivo</li>
-                <li>Suporte: PDF e PNG</li>
-                <li>Sem documentos multi-página</li>
-                <li>Rate limiting aplicado</li>
-              </ul>
-            </div>
-          </div>
-          <p className="api-link">
-            <a href="https://api.labelzoom.net/v2/api-docs" target="_blank" rel="noopener noreferrer">
-              📖 Documentação da API
-            </a>
-          </p>
-        </div>
-      </main>
-    </div>
+        </Box>
+
+        <Box sx={{ width: { xs: '100%', md: 350 } }}>
+          <Paper elevation={3} sx={{ p: 3, position: 'sticky', top: 20 }}>
+            <Typography variant="h6" gutterBottom>
+              🚀 Ações
+            </Typography>
+            
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {selectedFiles.length === 1 && (
+                <Box
+                  component="button"
+                  onClick={handleSingleConvert}
+                  disabled={isConverting}
+                  sx={{
+                    p: 2,
+                    border: 'none',
+                    borderRadius: 2,
+                    bgcolor: 'primary.main',
+                    color: 'white',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    '&:hover': {
+                      bgcolor: 'primary.dark'
+                    },
+                    '&:disabled': {
+                      bgcolor: 'grey.400',
+                      cursor: 'not-allowed'
+                    }
+                  }}
+                >
+                  {isConverting ? '🔄 Convertendo...' : '🚀 Converter para ZPL'}
+                </Box>
+              )}
+              
+              {selectedFiles.length > 1 && (
+                <Box
+                  component="button"
+                  onClick={handleBatchConvert}
+                  disabled={isConverting}
+                  sx={{
+                    p: 2,
+                    border: 'none',
+                    borderRadius: 2,
+                    bgcolor: 'secondary.main',
+                    color: 'white',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    '&:hover': {
+                      bgcolor: 'secondary.dark'
+                    },
+                    '&:disabled': {
+                      bgcolor: 'grey.400',
+                      cursor: 'not-allowed'
+                    }
+                  }}
+                >
+                  {isConverting ? '🔄 Processando...' : `🚀 Converter ${selectedFiles.length} Arquivos`}
+                </Box>
+              )}
+              
+              <Box
+                component="button"
+                onClick={handleReset}
+                sx={{
+                  p: 2,
+                  border: '2px solid',
+                  borderColor: 'grey.300',
+                  borderRadius: 2,
+                  bgcolor: 'transparent',
+                  color: 'text.primary',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    bgcolor: 'grey.100'
+                  }
+                }}
+              >
+                🔄 Reiniciar
+              </Box>
+            </Box>
+
+            <Divider sx={{ my: 3 }} />
+
+            <Typography variant="h6" gutterBottom>
+              ℹ️ Informações
+            </Typography>
+            
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                • Tamanho máximo: 1MB por arquivo
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                • Formatos suportados: PDF e PNG
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                • Conversão individual ou em lote
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                • Download automático dos resultados
+              </Typography>
+            </Box>
+          </Paper>
+        </Box>
+      </Box>
+    </Container>
   );
 }
 

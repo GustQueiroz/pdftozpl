@@ -1,5 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Typography,
+  Paper,
+  Button,
+  Alert,
+  Chip,
+  Divider
+} from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import DownloadIcon from '@mui/icons-material/Download';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 interface ZplResultProps {
   zplCode: string;
@@ -36,42 +48,80 @@ export const ZplResult: React.FC<ZplResultProps> = ({ zplCode, fileName }) => {
   };
 
   return (
-    <div className="zpl-result">
-      <div className="result-header">
-        <h3>✅ Conversão Concluída!</h3>
-        <div className="result-actions">
-          <button
-            className={`copy-button ${copied ? 'copied' : ''}`}
-            onClick={copyToClipboard}
-          >
-            {copied ? '✓ Copiado!' : '📋 Copiar'}
-          </button>
-          <button className="download-button" onClick={downloadZpl}>
-            💾 Baixar Novamente
-          </button>
-        </div>
-      </div>
+    <Paper elevation={3} sx={{ p: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+        <CheckCircleIcon color="success" sx={{ fontSize: 32 }} />
+        <Typography variant="h5" component="h3">
+          ✅ Conversão Concluída!
+        </Typography>
+      </Box>
 
-      <div className="zpl-code-container">
-        <pre className="zpl-code">
-          <code>{zplCode}</code>
-        </pre>
-      </div>
+      <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
+        <Button
+          variant="contained"
+          startIcon={copied ? <CheckCircleIcon /> : <ContentCopyIcon />}
+          onClick={copyToClipboard}
+          color={copied ? 'success' : 'primary'}
+        >
+          {copied ? 'Copiado!' : 'Copiar'}
+        </Button>
+        
+        <Button
+          variant="outlined"
+          startIcon={<DownloadIcon />}
+          onClick={downloadZpl}
+        >
+          Baixar Novamente
+        </Button>
+      </Box>
 
-      <div className="zpl-info">
-        <p>
+      <Alert severity="success" sx={{ mb: 3 }}>
+        <Typography variant="body2">
           <strong>✅ Arquivo baixado automaticamente!</strong>
-        </p>
-        <p>
-          <strong>Comprimento do código ZPL:</strong> {zplCode.length} caracteres
-        </p>
-        <p>
-          <strong>Linhas:</strong> {zplCode.split('\n').length}
-        </p>
-        <p>
-          <strong>Arquivo:</strong> {fileName ? `${fileName.replace(/\.[^/.]+$/, '')}.txt` : 'converted.txt'}
-        </p>
-      </div>
-    </div>
+        </Typography>
+      </Alert>
+
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          Código ZPL:
+        </Typography>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            bgcolor: 'grey.50',
+            maxHeight: 300,
+            overflow: 'auto',
+            fontFamily: 'monospace',
+            fontSize: '0.875rem',
+            lineHeight: 1.5
+          }}
+        >
+          <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+            {zplCode}
+          </pre>
+        </Paper>
+      </Box>
+
+      <Divider sx={{ my: 2 }} />
+
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        <Chip
+          label={`Comprimento: ${zplCode.length} caracteres`}
+          variant="outlined"
+          color="primary"
+        />
+        <Chip
+          label={`Linhas: ${zplCode.split('\n').length}`}
+          variant="outlined"
+          color="secondary"
+        />
+        <Chip
+          label={`Arquivo: ${fileName ? `${fileName.replace(/\.[^/.]+$/, '')}.txt` : 'converted.txt'}`}
+          variant="outlined"
+          color="info"
+        />
+      </Box>
+    </Paper>
   );
 }; 

@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef, useState } from 'react';
+import {
+  Box,
+  Typography,
+  Paper,
+  Alert,
+  IconButton
+} from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 interface FileUploadProps {
   onFileSelect: (files: File[]) => void;
@@ -87,44 +95,71 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   return (
-    <div className="file-upload-container">
-      <div
-        className={`file-upload-area ${dragActive ? 'drag-active' : ''}`}
+    <Box>
+      <Paper
+        elevation={dragActive ? 8 : 2}
+        sx={{
+          border: '2px dashed',
+          borderColor: dragActive ? 'primary.main' : 'grey.300',
+          bgcolor: dragActive ? 'primary.50' : 'background.paper',
+          transition: 'all 0.2s ease-in-out',
+          cursor: 'pointer',
+          '&:hover': {
+            borderColor: 'primary.main',
+            bgcolor: 'primary.50'
+          }
+        }}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
         onClick={handleClick}
       >
-        <div className="upload-content">
-          <svg
-            className="upload-icon"
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        <Box
+          sx={{
+            p: 4,
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2
+          }}
+        >
+          <IconButton
+            sx={{
+              width: 64,
+              height: 64,
+              bgcolor: 'primary.main',
+              color: 'white',
+              '&:hover': {
+                bgcolor: 'primary.dark'
+              }
+            }}
           >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7,10 12,15 17,10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          <h3>Arraste e solte seus arquivos aqui</h3>
-          <p>ou clique para selecionar</p>
-          <p className="file-types">
-            Tipos aceitos: {acceptedTypes.join(', ')}
-          </p>
-          <p className="file-size">
-            Tamanho máximo por arquivo: {maxSize}MB
-          </p>
-          <p className="file-multiple">
-            {multiple ? '✅ Múltiplos arquivos permitidos' : '❌ Apenas um arquivo'}
-          </p>
-        </div>
-      </div>
+            <CloudUploadIcon sx={{ fontSize: 32 }} />
+          </IconButton>
+          
+          <Typography variant="h6" component="h3">
+            Arraste e solte seus arquivos aqui
+          </Typography>
+          
+          <Typography variant="body2" color="text.secondary">
+            ou clique para selecionar
+          </Typography>
+          
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Tipos aceitos: {acceptedTypes.join(', ')}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Tamanho máximo por arquivo: {maxSize}MB
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {multiple ? '✅ Múltiplos arquivos permitidos' : '❌ Apenas um arquivo'}
+            </Typography>
+          </Box>
+        </Box>
+      </Paper>
 
       <input
         ref={fileInputRef}
@@ -136,10 +171,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       />
 
       {error && (
-        <div className="error-message">
+        <Alert severity="error" sx={{ mt: 2 }}>
           {error}
-        </div>
+        </Alert>
       )}
-    </div>
+    </Box>
   );
 }; 
