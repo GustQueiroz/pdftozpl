@@ -55,9 +55,8 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 }) => {
   const [isDeclarationMode, setIsDeclarationMode] = useState(false);
 
-  // Sincroniza o estado do modo declaração com os parâmetros
   useEffect(() => {
-    const isDeclaration = params.scaling === 48 && params.darkness === 80 && params.colorMode === 'BW';
+    const isDeclaration = params.scaling === 49 && params.darkness === 90 && params.colorMode === 'BW';
     setIsDeclarationMode(isDeclaration);
   }, [params.scaling, params.darkness, params.colorMode]);
 
@@ -67,15 +66,20 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
   };
 
   const handleDeclarationChange = (checked: boolean) => {
-    setIsDeclarationMode(checked);
     if (checked) {
-      handleParamChange('scaling', 48);
-      handleParamChange('darkness', 80);
+      // Aplica as configurações de declaração de conteúdo
+      handleParamChange('scaling', 49);
+      handleParamChange('darkness', 90);
       handleParamChange('colorMode', 'BW');
+      
+      setIsDeclarationMode(true);
     } else {
+      // Volta para os valores padrão
       handleParamChange('scaling', 100);
-      handleParamChange('darkness', 70);
+      handleParamChange('darkness', 90);
       handleParamChange('colorMode', 'BW');
+      
+      setIsDeclarationMode(false);
     }
   };
 
@@ -95,9 +99,9 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 📋 Declaração de Conteúdo
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Quando marcado, aplica configurações otimizadas para declarações de conteúdo: escala 48% e escuridão 80%
-              </Typography>
+                             <Typography variant="body2" color="text.secondary">
+                 Quando marcado, aplica configurações otimizadas para declarações de conteúdo: escala 49% e escuridão 90%
+               </Typography>
             </Box>
           }
         />
@@ -112,7 +116,6 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
         </AccordionSummary>
         <AccordionDetails>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* Dimensões da Etiqueta */}
             <Box>
               <Typography variant="h6" gutterBottom>
                 📏 Dimensões da Etiqueta
@@ -147,7 +150,6 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
             <Divider />
 
-            {/* Configurações de Impressão */}
             <Box>
               <Typography variant="h6" gutterBottom>
                 🖨️ Configurações de Impressão
@@ -175,22 +177,39 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                    size="small"
                  />
 
-                <TextField
-                  label="Escala (%)"
-                  type="number"
-                  value={isDeclarationMode ? 48 : (params.scaling || 100)}
-                  onChange={(e) => handleParamChange('scaling', Number(e.target.value))}
-                  inputProps={{ min: 1, max: 200 }}
-                  disabled={isDeclarationMode}
-                  size="small"
-                  helperText={isDeclarationMode ? 'Escala fixa em 48% para declaração de conteúdo' : ''}
-                />
+                                 <TextField
+                   label="Escala (%)"
+                   type="text"
+                   value={isDeclarationMode ? '49' : (params.scaling || 100)}
+                   onChange={(e) => {
+                     if (!isDeclarationMode) {
+                       const value = e.target.value;
+                       if (value === '') {
+                         return;
+                       }
+                       const numValue = Number(value);
+                       if (!isNaN(numValue) && numValue >= 1 && numValue <= 200) {
+                         handleParamChange('scaling', numValue);
+                       }
+                     }
+                   }}
+                   onBlur={(e) => {
+                     if (!isDeclarationMode) {
+                       const value = e.target.value;
+                       if (value === '' || isNaN(Number(value)) || Number(value) < 1 || Number(value) > 200) {
+                         handleParamChange('scaling', 100);
+                       }
+                     }
+                   }}
+                   disabled={isDeclarationMode}
+                   size="small"
+                   helperText={isDeclarationMode ? 'Escala fixa em 49% para declaração de conteúdo' : 'Digite um valor entre 1 e 200'}
+                 />
               </Box>
             </Box>
 
             <Divider />
 
-            {/* Configurações de Cor */}
             <Box>
               <Typography variant="h6" gutterBottom>
                 🎨 Configurações de Cor
@@ -199,8 +218,12 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 <FormControl size="small">
                   <InputLabel>Modo de Cor</InputLabel>
                   <Select
-                    value={isDeclarationMode ? 'BW' : (params.colorMode || 'BW')}
-                    onChange={(e) => handleParamChange('colorMode', e.target.value)}
+                    value={params.colorMode || 'BW'}
+                    onChange={(e) => {
+                      if (!isDeclarationMode) {
+                        handleParamChange('colorMode', e.target.value);
+                      }
+                    }}
                     label="Modo de Cor"
                     disabled={isDeclarationMode}
                   >
@@ -214,30 +237,33 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   )}
                 </FormControl>
 
-                <Box>
-                  <Typography gutterBottom>
-                    Escuridão: {isDeclarationMode ? 80 : (params.darkness || 70)}%
-                  </Typography>
-                  <Slider
-                    value={isDeclarationMode ? 80 : (params.darkness || 70)}
-                    onChange={(_, value) => handleParamChange('darkness', value)}
-                    min={1}
-                    max={100}
-                    disabled={isDeclarationMode}
-                    valueLabelDisplay="auto"
-                  />
-                  {isDeclarationMode && (
-                    <Typography variant="caption" color="text.secondary">
-                      Escuridão fixa em 80% para declaração de conteúdo
-                    </Typography>
-                  )}
-                </Box>
+                                 <Box>
+                   <Typography gutterBottom>
+                     Escuridão: {isDeclarationMode ? 90 : (params.darkness || 90)}%
+                   </Typography>
+                   <Slider
+                     value={isDeclarationMode ? 90 : (params.darkness || 90)}
+                     onChange={(_, value) => {
+                       if (!isDeclarationMode) {
+                         handleParamChange('darkness', value);
+                       }
+                     }}
+                     min={1}
+                     max={100}
+                     disabled={isDeclarationMode}
+                     valueLabelDisplay="auto"
+                   />
+                   {isDeclarationMode && (
+                     <Typography variant="caption" color="text.secondary">
+                       Escuridão fixa em 90% para declaração de conteúdo
+                     </Typography>
+                   )}
+                 </Box>
               </Box>
             </Box>
 
             <Divider />
 
-            {/* Configurações PDF */}
             <Box>
               <Typography variant="h6" gutterBottom>
                 📄 Configurações PDF

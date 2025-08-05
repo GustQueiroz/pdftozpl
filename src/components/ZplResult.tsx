@@ -48,7 +48,7 @@ export const ZplResult: React.FC<ZplResultProps> = ({ zplCode, fileName }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 3 }}>
+    <Paper elevation={3} sx={{ p: 3, width: '100%', minWidth: 0, overflow: 'hidden' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
         <CheckCircleIcon color="success" sx={{ fontSize: 32 }} />
         <Typography variant="h5" component="h3">
@@ -81,7 +81,7 @@ export const ZplResult: React.FC<ZplResultProps> = ({ zplCode, fileName }) => {
         </Typography>
       </Alert>
 
-      <Box sx={{ mb: 3 }}>
+      <Box sx={{ mb: 3, width: '100%', minWidth: 0 }}>
         <Typography variant="h6" gutterBottom>
           Código ZPL:
         </Typography>
@@ -94,10 +94,18 @@ export const ZplResult: React.FC<ZplResultProps> = ({ zplCode, fileName }) => {
             overflow: 'auto',
             fontFamily: 'monospace',
             fontSize: '0.875rem',
-            lineHeight: 1.5
+            lineHeight: 1.5,
+            width: '100%',
+            minWidth: 0
           }}
         >
-          <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+          <pre style={{ 
+            margin: 0, 
+            whiteSpace: 'pre-wrap', 
+            wordBreak: 'break-word',
+            overflowWrap: 'break-word',
+            maxWidth: '100%'
+          }}>
             {zplCode}
           </pre>
         </Paper>

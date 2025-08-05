@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Tipos inline para evitar problemas de importação
 interface LabelZoomParams {
   label?: {
     width?: number;
@@ -57,7 +56,7 @@ export class LabelZoomApiService {
         file,
         {
           headers,
-          timeout: 30000, // 30 segundos
+          timeout: 30000,
           responseType: 'text',
         }
       );

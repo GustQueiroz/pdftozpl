@@ -51,7 +51,7 @@ function App() {
     rotation: 180,
     scaling: 100,
     colorMode: 'BW',
-    darkness: 70,
+    darkness: 90,
     pdf: {
       conversionMode: 'IMAGE'
     }
@@ -185,7 +185,7 @@ function App() {
       rotation: 180,
       scaling: 100,
       colorMode: 'BW',
-      darkness: 70,
+      darkness: 90,
       pdf: {
         conversionMode: 'IMAGE'
       }
@@ -193,7 +193,7 @@ function App() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4, overflow: 'hidden' }}>
       <Box sx={{ textAlign: 'center', mb: 4 }}>
         <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
           🖨️ PDF para ZPL Converter
@@ -204,7 +204,7 @@ function App() {
       </Box>
 
       <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', md: 'row' } }}>
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
           <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
             <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
               📁 Selecionar Arquivos
